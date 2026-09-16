@@ -11,14 +11,14 @@ The design separates business users, sensitive departments, shared services, man
 ```mermaid
 flowchart LR
     INTERNET((Internet)) --> EDGE[Perimeter firewall]
-    EDGE --> DMZ[DMZ\nPublic HTTPS service]
-    EDGE --> VPN[VPN concentrator\nMFA and role-based access]
+    EDGE --> DMZ[DMZ<br/>Public HTTPS service]
+    EDGE --> VPN[VPN concentrator<br/>MFA and role-based access]
     EDGE --> S1[Site 1 core]
     EDGE -. IPsec tunnel .- S2[Site 2 core]
     S1 --> USERS[User VLANs]
     S1 --> SERVERS[Internal servers]
     S1 --> ADMIN[Management VLAN]
-    S2 --> GUEST[Guest Wi-Fi\nInternet only]
+    S2 --> GUEST[Guest Wi-Fi<br/>Internet only]
     S2 --> INFRA[Infrastructure services]
     SERVERS --> LOGS[Central logging and monitoring]
     ADMIN --> LOGS

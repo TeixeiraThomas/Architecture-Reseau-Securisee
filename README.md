@@ -1,28 +1,56 @@
 # Secure Multi-Site Network Architecture
 
-Technical architecture document for a secure multi-site network designed for a mid-sized company with approximately 100 users. The project covers segmentation, secure remote access, site-to-site connectivity and controlled public services.
+A technical architecture study for a secure multi-site network serving a mid-sized company with approximately 100 users. The project translates business and security requirements into a vendor-neutral network design.
 
-## Scope
+## Executive Summary
 
-- Two interconnected sites with distinct addressing plans
-- VLAN segmentation for users, servers, management, guest Wi-Fi and DMZ services
-- Site-to-site IPsec VPN and remote-access VPN with MFA
-- DMZ exposure limited to HTTPS services
-- Guest Wi-Fi isolated from internal networks
-- Centralized firewalling, logging and infrastructure monitoring
-- Risk analysis and security controls aligned with common security practices
+The design separates business users, sensitive departments, shared services, management, guest access and public-facing services into controlled security zones. It combines VLAN segmentation, firewall policy, IPsec connectivity, remote access, monitoring and risk reduction measures.
 
-## Network Design
+## Reference Architecture
 
-The documentation describes logical zones, VLAN allocation, RFC1918 addressing, firewall boundaries, VPN pools and the expected traffic flows between sites. It is intentionally vendor-neutral so that the design can be implemented with different network platforms.
+```mermaid
+flowchart LR
+    INTERNET((Internet)) --> EDGE[Perimeter firewall]
+    EDGE --> DMZ[DMZ\nPublic HTTPS service]
+    EDGE --> VPN[VPN concentrator\nMFA and role-based access]
+    EDGE --> S1[Site 1 core]
+    EDGE -. IPsec tunnel .- S2[Site 2 core]
+    S1 --> USERS[User VLANs]
+    S1 --> SERVERS[Internal servers]
+    S1 --> ADMIN[Management VLAN]
+    S2 --> GUEST[Guest Wi-Fi\nInternet only]
+    S2 --> INFRA[Infrastructure services]
+    SERVERS --> LOGS[Central logging and monitoring]
+    ADMIN --> LOGS
+```
+
+## Security Zones
+
+| Zone | Purpose | Main control |
+| --- | --- | --- |
+| User VLANs | Department workstations | Inter-VLAN firewall policy |
+| Server VLAN | Internal business services | Least-privilege service flows |
+| DMZ | Public HTTPS service | Inbound 443 only; restricted database access |
+| Guest Wi-Fi | Untrusted devices | Internet-only access and client isolation |
+| Management VLAN | Administration and monitoring | Restricted operator access |
+| VPN pools | Remote and site-to-site access | MFA, role-based ACLs and encrypted tunnels |
+
+## Design Principles
+
+- Use RFC1918 addressing with a separate plan for each site.
+- Keep sensitive departments and infrastructure services in dedicated zones.
+- Route all inter-zone traffic through explicit firewall policy.
+- Expose public services through the DMZ instead of the internal network.
+- Treat guest and remote access as untrusted until authenticated and authorized.
+- Collect firewall, VPN and infrastructure events for detection and investigation.
 
 ## Deliverable
 
-The complete technical architecture is available in [DAT.pdf](DAT.pdf). It includes the assumptions, security objectives, segmentation model, addressing principles, VPN design and risk-reduction measures.
+The complete technical document is available in [DAT.pdf](DAT.pdf). It covers assumptions, scope, threat considerations, VLAN allocation, addressing principles, VPN design, firewall boundaries and risk-reduction measures.
 
 ## References
 
-The design takes into account GDPR principles, ISO/IEC 27001 and 27002, and ANSSI security guidance.
+The study is informed by GDPR principles, ISO/IEC 27001 and 27002, and ANSSI security guidance. It is an academic architecture proposal, not a turnkey production configuration.
 
 ## Author
 
@@ -30,4 +58,4 @@ Thomas Teixeira
 
 ## Status
 
-Academic architecture project completed as part of the ETNA curriculum.
+Completed academic network-security architecture project developed during the ETNA curriculum.
